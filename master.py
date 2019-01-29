@@ -1,2 +1,2 @@
 class Poker:
-    
+    print("yeet")
