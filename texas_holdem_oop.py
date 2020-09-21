@@ -1,6 +1,5 @@
 import random as r
 import time as t
-#import deck_creator as dc
 from deck_creator_local import dc
 
 # fc = face cards; converts values to names of face cards
@@ -119,10 +118,10 @@ class Community:
         self.burnpile = []
     @property
     def displayCards(self):
-        display = 'Community Cards:\n'
+        displayCards = 'Community Cards:\n'
         for val, suit in self.cards:
-            display += f'[{dsp.get(val, val)}{symbols[suit]}] '
-        return display
+            displayCards += f'[{dsp.get(val, val)}{symbols[suit]}] '
+        return displayCards
     # Calls deck_creator for flop, turn, and river when they are called
     def flop(self):
         while len(self.cards) < 3:
@@ -183,15 +182,12 @@ class Player:
     # displyHold shows hold cards but makes them easier to read; the tuple (14, 'h') converts to [Ah]
     @property
     def displayHold(self):
-        display = f'{self}: '
+        displayHold = f'{self}: '
         for val, suit in self.holdCards:
-            display += f'[{dsp.get(val, val)}{symbols[suit]}] '
-        return display
-
-    def check(self):
-        pass
+            displayHold += f'[{dsp.get(val, val)}{symbols[suit]}] '
+        return displayHold
     def call(self):
-        # call matches the current bet at the table
+        # call matches the current bet at the table, NOT IMPLEMENTED
         currentBet = self.table.currentBet
         if currentBet > self.currentChips:
             self.bet = self.currentChips
@@ -203,7 +199,7 @@ class Player:
         while newBet <= 0:
             try:
                 newBet = int(input('How much would you like to raise?'))
-            except:
+            except ValueError:
                 continue
         self.bet = currentBet + newBet
     # fold will be called if a player decides to forfeit that round
@@ -248,9 +244,8 @@ class Player:
 
         # royal flush
         fVals = [val for val,suit in self.hand if self.suits.count(suit) >= 5]
-        if {2,3,4,5}.issubset(fVals):
-            if 14 in fVals and 6 not in fVals:
-                return 8, 5
+        if {2,3,4,5}.issubset(fVals) and 14 in fVals and 6 not in fVals:
+            return 8, 5
         for v in sorted(fVals, reverse=True):
             if {v-4, v-3, v-2, v-1, v}.issubset(fVals):
                 if v == 14:
@@ -277,9 +272,8 @@ class Player:
             return (5,) + tuple(sorted(fVals, reverse=True)[:5])
 
         # straight
-        if {2,3,4,5}.issubset(self.vals):
-            if 14 in self.vals and 6 not in self.vals:
-                return 4, 5
+        if {2,3,4,5}.issubset(self.vals) and 14 in self.vals and 6 not in self.vals:
+            return 4, 5
         for v in self.vals:
             if {v-4, v-3, v-2, v-1, v}.issubset(self.vals):
                 return 4, v
@@ -312,11 +306,11 @@ class Player:
         rank = info[0]
         try:
             val = fc[info[1]]
-        except:
+        except IndexError:
             val = None
         try:
             kicker = info[2:]
-        except:
+        except IndexError:
             kicker = None
         if rank == 9:
             return f"{sent} a royal flush!"
@@ -387,7 +381,7 @@ def play(printOut=True):
     while not 2 <= numPlayers <= 22:
         try:
             numPlayers = int(input('How many players are at the table? (2-22) '))
-        except:
+        except ValueError:
             continue
     
     # create new table and set of community cards

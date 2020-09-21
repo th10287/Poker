@@ -21,10 +21,10 @@ class Hand:
         self.cards = dc.draw(5)
     @property
     def display(self):
-        display = ''
+        displayCards = ''
         for val, suit in self.cards:
-            display += f'[{dsp.get(val, val)}{suit}] '
-        return display
+            displayCards += f'[{dsp.get(val, val)}{suit}] '
+        return displayCards
     @property
     def rank(self):
         # determines which hand the player has, from a royal flush \
@@ -34,9 +34,8 @@ class Hand:
 
         # royal flush
         fVals = [val for val,suit in self.cards if self.suits.count(suit) >= 5]
-        if {2,3,4,5}.issubset(fVals):
-            if 14 in fVals and 6 not in fVals:
-                return 'Straight Flush', 50
+        if {2,3,4,5}.issubset(fVals) and 14 in fVals and 6 not in fVals:
+            return 'Straight Flush', 50
         for v in sorted(fVals, reverse=True):
             if {v-4, v-3, v-2, v-1, v}.issubset(fVals):
                 if v == 14:
