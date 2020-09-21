@@ -2,7 +2,6 @@
 
 # Imports
 from random import randint
-#import deck_creator as dc
 from deck_creator_local import dc
 
 
